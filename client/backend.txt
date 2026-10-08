@@ -1,0 +1,7 @@
+# Trivia-RPG backend environment selector.
+# Put the backend base URL on the first non-comment line. No rebuild needed.
+#
+# Temporary instance (used for testing — update once reserved):
+#   https://<temp-fqdn>
+# Production:
+https://oatymilkgames.cloud.namazustudios.com
