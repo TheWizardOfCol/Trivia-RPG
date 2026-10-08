@@ -68,13 +68,13 @@ func _render(data: Dictionary) -> void:
 
 	var total := 0
 	for option in options:
-		total += int(option.get("votes", 0))
+		total += _get_int(option, "votes")
 
 	for option in options:
 		var row: Dictionary = _rows.get(str(option.get("id", "")), {})
 		if row.is_empty():
 			continue
-		var votes := int(option.get("votes", 0))
+		var votes := _get_int(option, "votes")
 		var pct := 0.0 if total == 0 else 100.0 * float(votes) / float(total)
 		(row["count"] as Label).text = "%d votes · %d%%" % [votes, int(round(pct))]
 		(row["bar"] as ProgressBar).value = pct
@@ -92,12 +92,19 @@ func _get_str(data: Dictionary, key: String, fallback: String = "") -> String:
 	return fallback if value == null else str(value)
 
 func _time_left(data: Dictionary) -> String:
-	var closes_at := int(data.get("closesAtEpochMs", 0))
+	var closes_at := _get_int(data, "closesAtEpochMs")
 	if closes_at <= 0:
 		return "no time limit"
 	var local_now := int(Time.get_unix_time_from_system() * 1000)
 	var seconds := int(ceil(max(0, closes_at - local_now) / 1000.0))
 	return _fmt_seconds(seconds)
+
+func _get_int(data: Dictionary, key: String, fallback: int = 0) -> int:
+	# JSON null arrives as GDScript null — int(null) is a runtime error.
+	var value = data.get(key)
+	if value == null:
+		return fallback
+	return int(value)
 
 func _fmt_seconds(seconds: int) -> String:
 	if seconds >= 60:
