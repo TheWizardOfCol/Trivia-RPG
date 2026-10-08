@@ -2,7 +2,8 @@ extends Control
 
 ## Chat vote HUD: polls the backend for the current vote round and renders
 ## live totals. Rows are rebuilt when the question changes; counts and bars
-## update in place between rebuilds.
+## update in place between rebuilds. A closed round keeps its final tally on
+## screen (with a "Closed:" header) until the next round opens.
 
 const POLL_SECONDS := 3.0
 
@@ -41,19 +42,21 @@ func _on_vote_response(result: int, code: int, _headers: PackedStringArray, body
 		return
 
 	_render(data)
-	status_label.text = "Live · polling every %ss · %s" % [str(POLL_SECONDS), Backend.vote_url()]
 
 func _render(data: Dictionary) -> void:
-	if not data.get("active", false):
-		question_label.text = "No active vote right now"
+	var question_id := str(data.get("questionId", ""))
+	var active := bool(data.get("active", false))
+	var options: Array = data.get("options", [])
+
+	# No round has ever been opened on this backend.
+	if question_id == "":
+		question_label.text = "No vote yet — open one from the game or API"
+		status_label.text = "Idle · polling every %ss · %s" % [str(POLL_SECONDS), Backend.vote_url()]
 		_clear_rows()
 		_current_question_id = ""
 		return
 
-	question_label.text = str(data.get("question", "?"))
-
-	var options: Array = data.get("options", [])
-	var question_id := str(data.get("questionId", ""))
+	# Rebuild rows only when a new round replaces the old one.
 	if question_id != _current_question_id:
 		_current_question_id = question_id
 		_clear_rows()
@@ -72,6 +75,27 @@ func _render(data: Dictionary) -> void:
 		var pct := 0.0 if total == 0 else 100.0 * float(votes) / float(total)
 		(row["count"] as Label).text = "%d votes · %d%%" % [votes, int(round(pct))]
 		(row["bar"] as ProgressBar).value = pct
+
+	if active:
+		question_label.text = str(data.get("question", "?"))
+		status_label.text = "Live · closes in %s · %s" % [_time_left(data), Backend.vote_url()]
+	else:
+		# Round closed (manually or by timer) — keep the final tally on screen.
+		question_label.text = "Closed: %s" % str(data.get("question", "?"))
+		status_label.text = "Final tally · %s" % Backend.vote_url()
+
+func _time_left(data: Dictionary) -> String:
+	var closes_at := int(data.get("closesAtEpochMs", 0))
+	if closes_at <= 0:
+		return "no time limit"
+	var local_now := int(Time.get_unix_time_from_system() * 1000)
+	var seconds := int(ceil(max(0, closes_at - local_now) / 1000.0))
+	return _fmt_seconds(seconds)
+
+func _fmt_seconds(seconds: int) -> String:
+	if seconds >= 60:
+		return "%dm %02ds" % [seconds / 60, seconds % 60]
+	return "%ds" % seconds
 
 func _make_row(text: String) -> Dictionary:
 	var row := HBoxContainer.new()
