@@ -16,6 +16,7 @@ var _rows: Dictionary = {}
 var _current_question_id := ""
 
 func _ready() -> void:
+	http.timeout = 8.0
 	http.request_completed.connect(_on_vote_response)
 
 	var timer := Timer.new()
@@ -29,11 +30,11 @@ func _ready() -> void:
 func _poll() -> void:
 	var err := http.request(Backend.vote_url())
 	if err != OK:
-		status_label.text = "Could not reach backend (request failed to start)"
+		status_label.text = "Could not start request (error %d)" % err
 
 func _on_vote_response(result: int, code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
 	if result != HTTPRequest.RESULT_SUCCESS or code != 200:
-		status_label.text = "Backend offline — showing last known state"
+		status_label.text = "Backend unreachable (result %d · HTTP %d) — retrying" % [result, code]
 		return
 
 	var data = JSON.parse_string(body.get_string_from_utf8())
