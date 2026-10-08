@@ -19,9 +19,9 @@ In `package-info.java`, add `@ElementDependency` for the DAO layer:
 @GuiceElementModule(MyGameModule.class)
 @ElementDependency("dev.getelements.elements.sdk.dao")
 @ElementDependency("dev.getelements.elements.sdk.service")
-package com.mystudio.mygame;
+package com.triviarpg;
 
-import com.mystudio.mygame.guice.MyGameModule;
+import com.triviarpg.guice.MyGameModule;
 import dev.getelements.elements.sdk.annotation.ElementDefinition;
 import dev.getelements.elements.sdk.annotation.ElementDependency;
 import dev.getelements.elements.sdk.spi.guice.annotations.GuiceElementModule;

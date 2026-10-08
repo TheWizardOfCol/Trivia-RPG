@@ -43,7 +43,7 @@ Every Element package must have a `package-info.java`:
 @GuiceElementModule(MyGameModule.class)
 @ElementDependency("dev.getelements.elements.sdk.dao")
 @ElementDependency("dev.getelements.elements.sdk.service")
-package com.mystudio.mygame;
+package com.triviarpg;
 ```
 
 ### REST Endpoints (Jakarta RS)
@@ -351,7 +351,7 @@ Resource classes in these packages use setter-based `@Inject` (Jersey instantiat
 
 ## Package Layout Convention
 ```
-com.mystudio.mygame/
+com.triviarpg/
   ├── rest/           REST endpoints
   ├── service/        Business logic
   ├── model/          Request/response DTOs

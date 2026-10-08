@@ -52,7 +52,7 @@ Maven will prompt you for the standard coordinates (`groupId`, `artifactId`, `ve
 
 | Parameter | Description |
 |---|---|
-| `groupId` | The Maven group ID for your Element (e.g. `com.mystudio.mygame`) |
+| `groupId` | The Maven group ID for your Element (e.g. `com.triviarpg`) |
 | `artifactId` | The Maven artifact ID for your Element (e.g. `my-element`) |
 | `version` | Your project version (e.g. `1.0-SNAPSHOT`) |
 | `package` | The root Java package for generated source files |
@@ -65,10 +65,10 @@ mvn archetype:generate \
   -DarchetypeGroupId=dev.getelements.elements \
   -DarchetypeArtifactId=sdk-standard-element \
   -DarchetypeVersion=3.7.0-SNAPSHOT \
-  -DgroupId=com.mystudio.mygame \
+  -DgroupId=com.triviarpg \
   -DartifactId=my-element \
   -Dversion=1.0-SNAPSHOT \
-  -Dpackage=com.mystudio.mygame \
+  -Dpackage=com.triviarpg \
   -DelementsVersion=3.7.0-SNAPSHOT \
   -DinteractiveMode=false
 ```
@@ -116,7 +116,7 @@ Hello! Defining a new Element and making it recognizable by the Elements system 
 
 In this example, we have a single `GET` endpoint that returns "Hello World!". 
 
-First, we create the package under src/main that we want to house our code. We recommend using your company domain along with your application or game name, e.g. `com.mystudio.mygame`
+First, we create the package under src/main that we want to house our code. We recommend using your company domain along with your application or game name, e.g. `com.triviarpg`
 
 #### Add package-info
 
@@ -124,7 +124,7 @@ Inside this package, we need to include a file named `package-info.java` with th
 
 ```java
 @ElementDefinition(recursive = true)
-package com.mystudio.mygame;
+package com.triviarpg;
 
 import dev.getelements.elements.sdk.annotation.ElementDefinition;
 ```

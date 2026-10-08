@@ -71,7 +71,7 @@ Replace the root `pom.xml` entirely. The old root was both the parent and the im
 <version>1.0-SNAPSHOT</version>
 
 <!-- After -->
-<groupId>com.example.element</groupId>
+<groupId>com.triviarpg</groupId>
 <artifactId>parent</artifactId>
 <version>1.0-SNAPSHOT</version>
 <packaging>pom</packaging>
@@ -140,7 +140,7 @@ The old root listed every dependency directly with explicit versions. In 3.7, th
 
         <!-- Your own API module (unclassified, provided scope) -->
         <dependency>
-            <groupId>com.example.element</groupId>
+            <groupId>com.triviarpg</groupId>
             <artifactId>api</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
@@ -148,7 +148,7 @@ The old root listed every dependency directly with explicit versions. In 3.7, th
 
         <!-- Your own API module (classified jar, provided scope) -->
         <dependency>
-            <groupId>com.example.element</groupId>
+            <groupId>com.triviarpg</groupId>
             <artifactId>api</artifactId>
             <version>${project.version}</version>
             <classifier>${api.classifier}</classifier>
@@ -157,7 +157,7 @@ The old root listed every dependency directly with explicit versions. In 3.7, th
 
         <!-- Your element implementation -->
         <dependency>
-            <groupId>com.example.element</groupId>
+            <groupId>com.triviarpg</groupId>
             <artifactId>element</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -191,7 +191,7 @@ Create a new `api/` directory with the following `pom.xml`. This module holds in
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.example.element</groupId>
+        <groupId>com.triviarpg</groupId>
         <artifactId>parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
@@ -255,7 +255,7 @@ Unlike the old root POM, you do **not** specify `<version>` or `<scope>` on SDK 
 <dependencies>
     <!-- Classified API jar — copied into elm/api/ for export to other Elements -->
     <dependency>
-        <groupId>com.example.element</groupId>
+        <groupId>com.triviarpg</groupId>
         <artifactId>api</artifactId>
         <classifier>${api.classifier}</classifier>
     </dependency>
@@ -479,7 +479,7 @@ try (final var is = new FileInputStream("element-example-deployment/dev.geteleme
 final var local = ElementsLocalBuilder.getDefault()
         .withElementNamed(
                 "example",
-                "com.mystudio.mygame",
+                "com.triviarpg",
                 PropertiesAttributes.wrap(elementProperties))
         .build();
 
@@ -508,7 +508,7 @@ Create `debug/pom.xml`:
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.example.element</groupId>
+        <groupId>com.triviarpg</groupId>
         <artifactId>parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
@@ -551,8 +551,8 @@ public class run {
                         .useDefaultRepositories(true)
                         .elementPath()
                             .addSpiBuiltin("GUICE_7_0_0")
-                            .addApiArtifact("com.example.element:api:1.0-SNAPSHOT")
-                            .addElementArtifact("com.example.element:element:1.0-SNAPSHOT")
+                            .addApiArtifact("com.triviarpg:api:1.0-SNAPSHOT")
+                            .addElementArtifact("com.triviarpg:element:1.0-SNAPSHOT")
                         .endElementPath()
                         .build()
                 )
@@ -657,7 +657,7 @@ If you have custom attributes beyond the two shown above, add a `public static f
 
 **Project structure:**
 - [ ] Convert root `pom.xml` to `<packaging>pom</packaging>` parent with `<modules>`
-- [ ] Change root `groupId` from `org.example` to `com.example.element`
+- [ ] Change root `groupId` from `org.example` to `com.triviarpg`
 - [ ] Change root `artifactId` from `ElementSample` to `parent`
 - [ ] *(optional)* Create `api/` module with `maven-jar-plugin` classified-jar execution — only needed to export types to other Elements
 - [ ] *(optional)* Move shared interfaces into `api/src/main/java/`

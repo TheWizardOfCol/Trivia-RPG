@@ -100,14 +100,14 @@ Move any version properties that were previously declared in `element/pom.xml` u
     <dependencies>
         <!-- unclassified api (compile-time only) -->
         <dependency>
-            <groupId>com.example.element</groupId>
+            <groupId>com.triviarpg</groupId>
             <artifactId>api</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <!-- classified api jar (copied into elm/api/) -->
         <dependency>
-            <groupId>com.example.element</groupId>
+            <groupId>com.triviarpg</groupId>
             <artifactId>api</artifactId>
             <version>${project.version}</version>
             <classifier>${api.classifier}</classifier>
@@ -296,7 +296,7 @@ Also add the classified API jar as a dependency inside `element/pom.xml` so it i
 
 ```xml
 <dependency>
-    <groupId>com.example.element</groupId>
+    <groupId>com.triviarpg</groupId>
     <artifactId>api</artifactId>
     <classifier>${api.classifier}</classifier>
 </dependency>
@@ -323,7 +323,7 @@ The old `element/src/test/java/Main.java` that manually wired property files is 
 ```xml
 <project ...>
     <parent>
-        <groupId>com.example.element</groupId>
+        <groupId>com.triviarpg</groupId>
         <artifactId>parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
@@ -368,8 +368,8 @@ public class run {
                         .useDefaultRepositories(true)
                         .elementPath()
                             .addSpiBuiltin("GUICE_7_0_0")
-                            .addApiArtifact("com.example.element:api:1.0-SNAPSHOT")
-                            .addElementArtifact("com.example.element:element:1.0-SNAPSHOT")
+                            .addApiArtifact("com.triviarpg:api:1.0-SNAPSHOT")
+                            .addElementArtifact("com.triviarpg:element:1.0-SNAPSHOT")
                         .endElementPath()
                         .build()
                 )

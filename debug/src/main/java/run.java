@@ -42,7 +42,7 @@ public class run {
                 .withDeployment(builder -> builder
                         .useDefaultRepositories(true)
                         .elementPackage()
-                        .elmArtifact("com.example.element:element:elm:1.0-SNAPSHOT")
+                        .elmArtifact("com.triviarpg:element:elm:1.0-SNAPSHOT")
                         .endElementPackage()
                         .build()
                 )

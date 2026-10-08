@@ -1,4 +1,4 @@
-package com.mystudio.mygame;
+package com.triviarpg;
 
 import dev.getelements.elements.sdk.model.Headers;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
@@ -15,8 +15,8 @@ import static io.swagger.v3.oas.annotations.enums.SecuritySchemeType.APIKEY;
 
 @OpenAPIDefinition(
         info = @Info(
-                title = "Example Element",
-                description = "An example element.",
+                title = "Trivia-RPG Element",
+                description = "Chat-driven voting service for Trivia-RPG: open rounds, tally !vote messages from Twitch chat, and let the game poll results.",
                 contact = @Contact(
                         url = "https://namazustudios.com",
                         email = "info@namazustudios.com",
