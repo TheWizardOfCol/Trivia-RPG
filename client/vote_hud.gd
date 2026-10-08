@@ -18,6 +18,7 @@ var _current_question_id := ""
 func _ready() -> void:
 	http.timeout = 8.0
 	http.request_completed.connect(_on_vote_response)
+	print("Trivia-RPG HUD: polling %s" % Backend.vote_url())
 
 	var timer := Timer.new()
 	timer.wait_time = POLL_SECONDS
@@ -33,6 +34,7 @@ func _poll() -> void:
 		status_label.text = "Could not start request (error %d)" % err
 
 func _on_vote_response(result: int, code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
+	print("Trivia-RPG HUD: poll finished — result=%d http=%d" % [result, code])
 	if result != HTTPRequest.RESULT_SUCCESS or code != 200:
 		status_label.text = "Backend unreachable (result %d · HTTP %d) — retrying" % [result, code]
 		return
