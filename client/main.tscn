@@ -1,12 +1,14 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="PackedScene" path="res://vote_hud.tscn" id="1_hud"]
+[ext_resource type="Script" path="res://main.gd" id="2_main"]
 
 [node name="Main" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+script = ExtResource("2_main")
 
 [node name="Title" type="Label" parent="."]
 layout_mode = 1
@@ -30,6 +32,15 @@ offset_bottom = 104.0
 theme_override_colors/font_color = Color(0.7, 0.7, 0.75, 1)
 theme_override_font_sizes/font_size = 16
 text = "Skeleton — chat vote HUD polls the backend every 3 seconds"
+
+[node name="StartBattle" type="Button" parent="."]
+layout_mode = 1
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -90.0
+offset_right = 220.0
+offset_bottom = -50.0
+text = "Start Battle"
 
 [node name="VoteHUD" parent="." instance=ExtResource("1_hud")]
 layout_mode = 1
