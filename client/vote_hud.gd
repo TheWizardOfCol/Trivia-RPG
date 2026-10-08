@@ -44,9 +44,11 @@ func _on_vote_response(result: int, code: int, _headers: PackedStringArray, body
 	_render(data)
 
 func _render(data: Dictionary) -> void:
-	var question_id := str(data.get("questionId", ""))
+	# JSON null arrives as GDScript null — coerce before comparing.
+	var question_id := _get_str(data, "questionId")
 	var active := bool(data.get("active", false))
-	var options: Array = data.get("options", [])
+	var raw_options = data.get("options")
+	var options: Array = raw_options if typeof(raw_options) == TYPE_ARRAY else []
 
 	# No round has ever been opened on this backend.
 	if question_id == "":
@@ -77,12 +79,16 @@ func _render(data: Dictionary) -> void:
 		(row["bar"] as ProgressBar).value = pct
 
 	if active:
-		question_label.text = str(data.get("question", "?"))
+		question_label.text = _get_str(data, "question", "?")
 		status_label.text = "Live · closes in %s · %s" % [_time_left(data), Backend.vote_url()]
 	else:
 		# Round closed (manually or by timer) — keep the final tally on screen.
-		question_label.text = "Closed: %s" % str(data.get("question", "?"))
+		question_label.text = "Closed: %s" % _get_str(data, "question", "?")
 		status_label.text = "Final tally · %s" % Backend.vote_url()
+
+func _get_str(data: Dictionary, key: String, fallback: String = "") -> String:
+	var value = data.get(key)
+	return fallback if value == null else str(value)
 
 func _time_left(data: Dictionary) -> String:
 	var closes_at := int(data.get("closesAtEpochMs", 0))

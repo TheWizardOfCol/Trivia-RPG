@@ -1,7 +1,3 @@
-# Trivia-RPG backend environment selector.
-# Put the backend base URL on the first non-comment line. No rebuild needed.
-#
-# Temporary instance (used for testing — update once reserved):
-#   https://<temp-fqdn>
-# Production:
-https://oatymilkgames.cloud.namazustudios.com
+# Where the game's Elements backend lives for this checkout.
+# Trivia-RPG temporary preview instance (Phase 5 verification).
+https://6nlmwq2bsnq2.cloud.namazustudios.com
