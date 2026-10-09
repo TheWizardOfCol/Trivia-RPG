@@ -10,11 +10,14 @@ extends Control
 ##   LAST CHANCE — when the trainer drops below ~20% HP, one special
 ##             question. Correct finishes them.
 ##
-## Question data is the placeholder bank in questions.gd; the real content
-## (spreadsheet → Elements backend) replaces it later. Twitch voting is an
-## optional overlay on the same answer loop — solo play is the baseline.
+## Question data lives in game_data.gd (real bank imported from the
+## spreadsheet) plus the player's own starting set of placeholder general
+## questions. Twitch voting is an optional overlay on the same answer loop
+## — solo play is the baseline.
 
-const QB := preload("res://questions.gd")
+const GD := preload("res://game_data.gd")
+
+const TRAINER_NAME := "Dr. Embiggen"
 
 const PLAYER_MAX_HP := 30
 const PLAYER_MAX_MANA := 10
@@ -107,7 +110,7 @@ func start_battle() -> void:
 	trainer_hp = TRAINER_MAX_HP
 	seen.clear()
 	phase = Phase.PLAYER_ATTACK
-	trainer_name_label.text = "Bird Scientist"
+	trainer_name_label.text = TRAINER_NAME
 	message_label.text = "A trivia match begins!"
 	_refresh_stats()
 	_next_question()
@@ -128,22 +131,22 @@ func _next_question() -> void:
 	match phase:
 		Phase.PLAYER_ATTACK:
 			message_label.text = "Your turn — answer to attack!"
-			current_question = _pick(QB.PLAYER_SET)
+			current_question = _pick(GD.PLAYER_SET)
 		Phase.PLAYER_DEFEND:
 			message_label.text = "Incoming! Answer to defend."
-			current_question = _pick(QB.TRAINER_SET)
+			current_question = _pick(GD.TRAINERS[TRAINER_NAME])
 		Phase.LAST_CHANCE:
 			message_label.text = "LAST CHANCE! Their final question."
-			current_question = _pick(QB.TRAINER_SET)
+			current_question = _pick(GD.TRAINERS[TRAINER_NAME])
 		Phase.WON:
-			_show_end("You win! The Bird Scientist yields their question set.")
+			_show_end("You win! %s yields their question set." % TRAINER_NAME)
 			return
 		Phase.LOST:
 			_show_end("You lose... ashamed, you run away.")
 			return
 
 	question_label.text = current_question["question"]
-	for choice in QB.choices(current_question):
+	for choice in GD.choices(current_question):
 		var b := Button.new()
 		b.text = choice
 		b.custom_minimum_size = Vector2(0, 40)
