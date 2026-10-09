@@ -16,6 +16,7 @@ var _rows: Dictionary = {}
 var _current_question_id := ""
 
 func _ready() -> void:
+	_make_click_transparent(self)
 	http.timeout = 8.0
 	http.request_completed.connect(_on_vote_response)
 	print("Trivia-RPG HUD: polling %s" % Backend.vote_url())
@@ -27,6 +28,15 @@ func _ready() -> void:
 	timer.start()
 
 	_poll()
+
+func _make_click_transparent(node: Node) -> void:
+	# This HUD is display-only. Containers default to MOUSE_FILTER_STOP, so
+	# without this the full-screen overlay would swallow clicks meant for
+	# controls underneath (e.g. the title screen's Start Battle button).
+	for child in node.get_children():
+		if child is Control:
+			(child as Control).mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_make_click_transparent(child)
 
 func _poll() -> void:
 	var err := http.request(Backend.vote_url())
