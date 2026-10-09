@@ -10,7 +10,8 @@ extends RefCounted
 
 const NAVY := Color8(0x1F, 0x2A, 0x44)
 const NAVY_DARK := Color8(0x10, 0x16, 0x28)
-const WINE := Color8(0x6E, 0x1F, 0x2E)
+const WINE := Color8(0x9A, 0x2A, 0x3A)  # Brighter for attention (health/trainer)
+const WINE_DARK := Color8(0x7A, 0x20, 0x2A)
 const EMERALD := Color8(0x2E, 0x5E, 0x3A)
 const EMERALD_DARK := Color8(0x1E, 0x3E, 0x26)
 const ANTIQUE := Color8(0xFB, 0xF4, 0xDE)
@@ -53,7 +54,7 @@ static func _style_button(btn: Button) -> void:
 	btn.add_theme_stylebox_override("hover", _rect_style(NAVY.lightened(0.08), NAVY_DARK))
 	btn.add_theme_stylebox_override("pressed", _rect_style(NAVY_DARK, NAVY_DARK))
 	btn.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
-	btn.rotation = deg_to_rad(randf_range(-2.6, 2.6))
+	btn.rotation = deg_to_rad(randf_range(-5.0, 5.0))  # Slightly more ajar
 
 static func _rect_style(fill: Color, edge: Color) -> StyleBoxFlat:
 	var sb := StyleBoxFlat.new()

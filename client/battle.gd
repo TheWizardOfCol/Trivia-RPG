@@ -51,6 +51,7 @@ var trainer_hp_label: Label
 var message_label: Label
 var result_label: Label
 var time_label: Label
+var timer_popup
 var question_label: Label
 var options_box: VBoxContainer
 var player_bar: ProgressBar
@@ -72,12 +73,14 @@ func _process(delta: float) -> void:
 		_timeout()
 		return
 	_draw_time()
+	if timer_popup: timer_popup.update_timer(delta)
 
 func _draw_time() -> void:
 	var secs := int(ceil(time_left))
-	time_label.text = "%ds" % secs
-	var urgent := secs <= URGENT_SECONDS
-	time_label.add_theme_color_override("font_color", THEME.WINE if urgent else THEME.NAVY)
+	if time_label:
+		time_label.text = "%ds" % secs
+		var urgent := secs <= URGENT_SECONDS
+		time_label.add_theme_color_override("font_color", THEME.WINE if urgent else THEME.NAVY)
 
 func _build_ui() -> void:
 	add_child(THEME.make_background())
@@ -95,6 +98,9 @@ func _build_ui() -> void:
 	vbox.name = "VBox"
 	vbox.add_theme_constant_override("separation", 12)
 	margin.add_child(vbox)
+
+	timer_popup = preload("res://timer_popup.gd").new()
+	add_child(timer_popup)
 
 	trainer_name_label = Label.new()
 	trainer_name_label.name = "TrainerName"
@@ -164,34 +170,35 @@ func start_battle() -> void:
 	trainer_hp = TRAINER_MAX_HP
 	seen.clear()
 	phase = Phase.PLAYER_ATTACK
-	trainer_name_label.text = TRAINER_NAME
+	if trainer_name_label: trainer_name_label.text = TRAINER_NAME
 	var mode := "solo" if answer_seconds == SOLO_ANSWER_SECONDS else "twitch"
-	message_label.text = "A trivia match begins! (%s · %ds per question)" % [mode, int(answer_seconds)]
-	result_label.text = ""
+	if message_label: message_label.text = "A trivia match begins! (%s · %ds per question)" % [mode, int(answer_seconds)]
+	if result_label: result_label.text = ""
 	_refresh_stats()
 	_next_question()
 
 func _refresh_stats() -> void:
-	trainer_bar.value = max(trainer_hp, 0)
-	trainer_hp_label.text = "Trainer HP: %d/%d" % [max(trainer_hp, 0), TRAINER_MAX_HP]
-	player_bar.value = max(player_hp, 0)
-	player_stats_label.text = "Your HP: %d/%d    Mana: %d/%d" % [
+	if trainer_bar: trainer_bar.value = max(trainer_hp, 0)
+	if trainer_hp_label: trainer_hp_label.text = "Trainer HP: %d/%d" % [max(trainer_hp, 0), TRAINER_MAX_HP]
+	if player_bar: player_bar.value = max(player_hp, 0)
+	if player_stats_label: player_stats_label.text = "Your HP: %d/%d    Mana: %d/%d" % [
 		max(player_hp, 0), PLAYER_MAX_HP, player_mana, PLAYER_MAX_MANA]
 
 func _clear_options() -> void:
-	for child in options_box.get_children():
-		child.queue_free()
+	if options_box:
+		for child in options_box.get_children():
+			child.queue_free()
 
 func _next_question() -> void:
 	_clear_options()
 	match phase:
 		Phase.PLAYER_ATTACK:
-			message_label.text = "Your turn — answer to attack!"
+			if message_label: message_label.text = "Your turn — answer to attack!"
 			current_question = _pick(starter_bank)
 		Phase.PLAYER_DEFEND:
-			message_label.text = "Incoming! Answer to defend."
+			if message_label: message_label.text = "Incoming! Answer to defend."
 		Phase.LAST_CHANCE:
-			message_label.text = "LAST CHANCE! Their final question."
+			if message_label: message_label.text = "LAST CHANCE! Their final question."
 		Phase.WON:
 			_show_end("You win! %s yields their question set." % TRAINER_NAME)
 			return
@@ -201,15 +208,16 @@ func _next_question() -> void:
 
 	time_left = answer_seconds
 	_draw_time()
+	if timer_popup: timer_popup.set_timer(answer_seconds)
 	current_question = _pick(GD.TRAINERS[TRAINER_NAME])
-	question_label.text = current_question["question"]
+	if question_label: question_label.text = current_question["question"]
 	for choice in GD.choices(current_question):
 		var b := Button.new()
 		b.text = choice
 		b.custom_minimum_size = Vector2(0, 40)
 		b.pressed.connect(answer.bind(choice))
 		THEME.style_button(b)
-		options_box.add_child(b)
+		if options_box: options_box.add_child(b)
 	_refresh_stats()
 
 func _pick(bank: Array) -> Dictionary:
@@ -243,11 +251,11 @@ func _resolve_question(correct: bool, timed_out: bool) -> void:
 				var dmg := BASE_DAMAGE if not seen.has(current_question["id"]) else HALF_DAMAGE
 				seen[current_question["id"]] = true
 				trainer_hp -= dmg
-				result_label.text = "Correct! You deal %d damage." % dmg
+				if result_label: result_label.text = "Correct! You deal %d damage." % dmg
 			elif timed_out:
-				result_label.text = "Time's up! No damage."
+				if result_label: result_label.text = "Time's up! No damage."
 			else:
-				result_label.text = "Wrong! No damage this turn."
+				if result_label: result_label.text = "Wrong! No damage this turn."
 			if trainer_hp <= 0:
 				phase = Phase.WON
 			elif trainer_hp <= int(TRAINER_MAX_HP * LAST_CHANCE_THRESHOLD):
@@ -256,13 +264,13 @@ func _resolve_question(correct: bool, timed_out: bool) -> void:
 				phase = Phase.PLAYER_DEFEND
 		Phase.PLAYER_DEFEND, Phase.LAST_CHANCE:
 			if correct:
-				result_label.text = "Correct! You hold them off."
+				if result_label: result_label.text = "Correct! You hold them off."
 			else:
 				player_hp -= TRAINER_DAMAGE
 				if timed_out:
-					result_label.text = "Time's up! You take %d damage." % TRAINER_DAMAGE
+					if result_label: result_label.text = "Time's up! You take %d damage." % TRAINER_DAMAGE
 				else:
-					result_label.text = "Wrong! You take %d damage." % TRAINER_DAMAGE
+					if result_label: result_label.text = "Wrong! You take %d damage." % TRAINER_DAMAGE
 			if player_hp <= 0:
 				phase = Phase.LOST
 			elif phase == Phase.LAST_CHANCE and correct:
@@ -273,19 +281,20 @@ func _resolve_question(correct: bool, timed_out: bool) -> void:
 	_next_question()
 
 func _show_end(text: String) -> void:
-	time_label.text = ""
-	question_label.text = text
+	if time_label: time_label.text = ""
+	if timer_popup: timer_popup.hide()
+	if question_label: question_label.text = text
 	var again := Button.new()
 	again.text = "Fight again"
 	again.custom_minimum_size = Vector2(0, 40)
 	again.pressed.connect(start_battle)
 	THEME.style_button(again)
-	options_box.add_child(again)
+	if options_box: options_box.add_child(again)
 
 	var back := Button.new()
 	back.text = "Back to title"
 	back.custom_minimum_size = Vector2(0, 40)
 	back.pressed.connect(func() -> void: get_tree().change_scene_to_file("res://main.tscn"))
 	THEME.style_button(back)
-	options_box.add_child(back)
+	if options_box: options_box.add_child(back)
 	_refresh_stats()
