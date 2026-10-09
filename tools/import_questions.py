@@ -12,20 +12,7 @@ import json
 import re
 import sys
 
-PLAYER_SET = [
-    {"id": "p1", "question": "What is the capital of Australia?", "correct": "Canberra",
-     "wrong": ["Sydney", "Melbourne", "Perth"]},
-    {"id": "p2", "question": "How many continents are there on Earth?", "correct": "Seven",
-     "wrong": ["Five", "Six", "Eight"]},
-    {"id": "p3", "question": "Which planet is closest to the Sun?", "correct": "Mercury",
-     "wrong": ["Venus", "Mars", "Earth"]},
-    {"id": "p4", "question": "What is the largest mammal?", "correct": "Blue whale",
-     "wrong": ["Elephant", "Giraffe", "Hippopotamus"]},
-    {"id": "p5", "question": "How many sides does a hexagon have?", "correct": "Six",
-     "wrong": ["Five", "Seven", "Eight"]},
-    {"id": "p6", "question": "Which element has the symbol O?", "correct": "Oxygen",
-     "wrong": ["Gold", "Osmium", "Oganesson"]},
-]
+PLAYER_SET = []
 
 
 def esc(s: str) -> str:
@@ -59,11 +46,7 @@ def main() -> None:
            "## \"Unnamed Trivia RPG Game - Sheet1.csv\" (%d questions, %d trainers)." % (total, len(trainers)),
            "## Special (\"order these\") rows are design ideas and were excluded.",
            "## Re-run the importer to regenerate from a fresh export.",
-           "", "const PLAYER_SET := ["]
-    for q in PLAYER_SET:
-        out.append("    %s," % json.dumps(q, ensure_ascii=False))
-    out.append("]")
-    out.append("")
+           ""]
     out.append("const TRAINERS := {")
     for ch, qs in sorted(trainers.items(), key=lambda x: -len(x[1])):
         out.append("    %s: [" % esc(ch))

@@ -1,3 +1,6 @@
 # Where the game's Elements backend lives for this checkout.
 # Trivia-RPG temporary preview instance (Phase 5 verification).
 https://6nlmwq2bsnq2.cloud.namazustudios.com
+
+# Answer timer mode: solo (25s) or twitch (35s for the chat to answer).
+mode=solo

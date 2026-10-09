@@ -5,15 +5,6 @@ extends RefCounted
 ## Special ("order these") rows are design ideas and were excluded.
 ## Re-run the importer to regenerate from a fresh export.
 
-const PLAYER_SET := [
-    {"id": "p1", "question": "What is the capital of Australia?", "correct": "Canberra", "wrong": ["Sydney", "Melbourne", "Perth"]},
-    {"id": "p2", "question": "How many continents are there on Earth?", "correct": "Seven", "wrong": ["Five", "Six", "Eight"]},
-    {"id": "p3", "question": "Which planet is closest to the Sun?", "correct": "Mercury", "wrong": ["Venus", "Mars", "Earth"]},
-    {"id": "p4", "question": "What is the largest mammal?", "correct": "Blue whale", "wrong": ["Elephant", "Giraffe", "Hippopotamus"]},
-    {"id": "p5", "question": "How many sides does a hexagon have?", "correct": "Six", "wrong": ["Five", "Seven", "Eight"]},
-    {"id": "p6", "question": "Which element has the symbol O?", "correct": "Oxygen", "wrong": ["Gold", "Osmium", "Oganesson"]},
-]
-
 const TRAINERS := {
     "Watta-Tol": [
         {"id": "wattatol0", "question": "Which of these tools are NOT used when developing photographs?", "correct": "Enlarging easel", "wrong": ["Print tongs", "Safelight", "Line level"]},
