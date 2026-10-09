@@ -1,16 +1,17 @@
 extends Control
 
 ## Battle slice, single-player. Turn flow (design doc v1 simplified):
-##   ATTACK  — answer a question correctly to deal damage (full damage the
-##             first time you see it, half on repeats). Wrong/timeout: none.
-##   DEFEND  — they strike back; answer correctly to block, wrong/timeout
-##             costs you HP.
+##   ATTACK  — answer your own starter bank correctly to deal damage (full
+##             damage the first time you see a question, half on repeats).
+##             Wrong/timeout: none.
+##   DEFEND  — they strike back with their own set; answer correctly to
+##             block, wrong/timeout costs you HP.
 ##   LAST CHANCE — when the trainer drops below ~20% HP, one final question.
 ##             Correct finishes them.
 ##
-## Every question comes from the trainer's own specialty set (game_data.gd,
-## imported from the spreadsheet). The stock placeholder questions were
-## removed by design.
+## The starter bank is King Tut Oiral's gift in The Wastes: for now it is
+## the merged general-knowledge spread of every trainer's questions (see
+## game_data.gd); a dedicated "General" bank replaces it later.
 ##
 ## Answer timer: 25s solo; 35s in Twitch mode so the chat has time to vote.
 ## Mode comes from Backend.mode() = --mode=twitch arg or backend.txt.
@@ -36,6 +37,7 @@ enum Phase { PLAYER_ATTACK, PLAYER_DEFEND, LAST_CHANCE, WON, LOST }
 
 var answer_seconds := SOLO_ANSWER_SECONDS
 var time_left := SOLO_ANSWER_SECONDS
+var starter_bank: Array = []
 var player_hp := PLAYER_MAX_HP
 var player_mana := PLAYER_MAX_MANA
 var trainer_hp := TRAINER_MAX_HP
@@ -56,6 +58,7 @@ var player_stats_label: Label
 
 func _ready() -> void:
 	answer_seconds = TWITCH_ANSWER_SECONDS if Backend.mode() == "twitch" else SOLO_ANSWER_SECONDS
+	starter_bank = GD.player_starter_bank()
 	_build_ui()
 	THEME.apply(self)
 	start_battle()
@@ -184,6 +187,7 @@ func _next_question() -> void:
 	match phase:
 		Phase.PLAYER_ATTACK:
 			message_label.text = "Your turn — answer to attack!"
+			current_question = _pick(starter_bank)
 		Phase.PLAYER_DEFEND:
 			message_label.text = "Incoming! Answer to defend."
 		Phase.LAST_CHANCE:

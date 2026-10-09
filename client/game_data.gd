@@ -671,3 +671,12 @@ static func choices(q: Dictionary) -> Array:
 	c.shuffle()
 	return c
 
+## The player's starting bank — King Tut Oiral's gift in The Wastes.
+## TODO: a dedicated "General" sheet category; for now it is the merged
+## general-knowledge spread of every trainer's questions.
+static func player_starter_bank() -> Array:
+	var out: Array = []
+	for key in TRAINERS:
+		out.append_array(TRAINERS[key])
+	return out
+

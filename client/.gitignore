@@ -2,6 +2,7 @@
 .godot/
 *.translation
 *.uid
+*.import
 
 # OS
 .DS_Store
