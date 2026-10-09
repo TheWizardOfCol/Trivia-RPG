@@ -45,7 +45,7 @@ static func _is_trainer_bar(bar: Node) -> bool:
 ## with antique-white type, tilted a few degrees so no two sit quite square.
 static func _style_button(btn: Button) -> void:
 	btn.add_theme_font_override("font", BODY_FONT)
-	btn.add_theme_font_size_override("font_size", 20)
+	btn.add_theme_font_size_override("font_size", 22)
 	btn.add_theme_color_override("font_color", ANTIQUE)
 	btn.add_theme_color_override("font_hover_color", PARCHMENT)
 	btn.add_theme_color_override("font_pressed_color", ANTIQUE)
@@ -54,7 +54,7 @@ static func _style_button(btn: Button) -> void:
 	btn.add_theme_stylebox_override("hover", _rect_style(NAVY.lightened(0.08), NAVY_DARK))
 	btn.add_theme_stylebox_override("pressed", _rect_style(NAVY_DARK, NAVY_DARK))
 	btn.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
-	btn.rotation = deg_to_rad(randf_range(-5.0, 5.0))  # Slightly more ajar
+	btn.rotation = deg_to_rad(randf_range(-6.0, 6.0))  # Slightly more ajar
 
 static func _rect_style(fill: Color, edge: Color) -> StyleBoxFlat:
 	var sb := StyleBoxFlat.new()

@@ -85,18 +85,46 @@ func _draw_time() -> void:
 func _build_ui() -> void:
 	add_child(THEME.make_background())
 
+	# View area (top) for NPC/background
+	var view := Control.new()
+	view.name = "View"
+	view.set_anchors_preset(Control.PRESET_FULL_RECT)
+	view.offset_bottom = -get_viewport_rect().size.y * 0.42  # leave bottom space
+	view.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(view)
+
+	# NPC sprite placeholder slot
+	var npc := Sprite2D.new()
+	npc.name = "NPCSprite"
+	npc.centered = true
+	npc.position = view.get_viewport_rect().size / 2
+	npc.position.y -= 60
+	view.add_child(npc)
+
+	# Bottom menu panel (< half)
+	var panel := PanelContainer.new()
+	panel.name = "MenuPanel"
+	panel.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+	panel.custom_minimum_size = Vector2(0, get_viewport_rect().size.y * 0.42)
+	panel.offset_top = -get_viewport_rect().size.y * 0.42
+	panel.add_theme_stylebox_override("panel", StyleBoxFlat.new())
+	var sbp := panel.get_theme_stylebox("panel") as StyleBoxFlat
+	if sbp:
+		sbp.bg_color = Color(0xD7,0xC0,0x93, 0.96)
+		sbp.border_color = Color(0x4A,0x3E,0x2A)
+		sbp.set_border_width_all(2)
+	add_child(panel)
+
 	var margin := MarginContainer.new()
-	margin.name = "Margin"
-	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
-	margin.add_theme_constant_override("margin_left", 40)
-	margin.add_theme_constant_override("margin_top", 24)
-	margin.add_theme_constant_override("margin_right", 40)
-	margin.add_theme_constant_override("margin_bottom", 24)
-	add_child(margin)
+	margin.add_theme_constant_override("margin_left", 16)
+	margin.add_theme_constant_override("margin_top", 10)
+	margin.add_theme_constant_override("margin_right", 16)
+	margin.add_theme_constant_override("margin_bottom", 12)
+	panel.add_child(margin)
 
 	var vbox := VBoxContainer.new()
 	vbox.name = "VBox"
-	vbox.add_theme_constant_override("separation", 12)
+	vbox.add_theme_constant_override("separation", 10)
 	margin.add_child(vbox)
 
 	timer_popup = preload("res://timer_popup.gd").new()
@@ -104,48 +132,48 @@ func _build_ui() -> void:
 
 	trainer_name_label = Label.new()
 	trainer_name_label.name = "TrainerName"
-	trainer_name_label.add_theme_font_size_override("font_size", 26)
+	trainer_name_label.add_theme_font_size_override("font_size", 28)
 	vbox.add_child(trainer_name_label)
 
 	trainer_bar = ProgressBar.new()
 	trainer_bar.name = "TrainerBar"
 	trainer_bar.max_value = TRAINER_MAX_HP
-	trainer_bar.custom_minimum_size = Vector2(0, 22)
+	trainer_bar.custom_minimum_size = Vector2(0, 24)
 	trainer_bar.show_percentage = false
 	vbox.add_child(trainer_bar)
 
 	trainer_hp_label = Label.new()
 	trainer_hp_label.name = "TrainerHpLabel"
-	trainer_hp_label.add_theme_font_size_override("font_size", 14)
+	trainer_hp_label.add_theme_font_size_override("font_size", 16)
 	vbox.add_child(trainer_hp_label)
 
 	message_label = Label.new()
 	message_label.name = "Message"
-	message_label.add_theme_font_size_override("font_size", 16)
+	message_label.add_theme_font_size_override("font_size", 20)
 	message_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	vbox.add_child(message_label)
 
 	result_label = Label.new()
 	result_label.name = "Result"
-	result_label.add_theme_font_size_override("font_size", 15)
+	result_label.add_theme_font_size_override("font_size", 18)
 	result_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	vbox.add_child(result_label)
 
 	question_label = Label.new()
 	question_label.name = "Question"
-	question_label.add_theme_font_size_override("font_size", 22)
+	question_label.add_theme_font_size_override("font_size", 26)
 	question_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	vbox.add_child(question_label)
 
 	time_label = Label.new()
 	time_label.name = "Clock"
-	time_label.add_theme_font_size_override("font_size", 26)
+	time_label.add_theme_font_size_override("font_size", 22)
 	time_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	vbox.add_child(time_label)
 
 	options_box = VBoxContainer.new()
 	options_box.name = "Options"
-	options_box.add_theme_constant_override("separation", 8)
+	options_box.add_theme_constant_override("separation", 10)
 	vbox.add_child(options_box)
 
 	var spacer := Control.new()
@@ -155,13 +183,13 @@ func _build_ui() -> void:
 	player_bar = ProgressBar.new()
 	player_bar.name = "PlayerBar"
 	player_bar.max_value = PLAYER_MAX_HP
-	player_bar.custom_minimum_size = Vector2(0, 22)
+	player_bar.custom_minimum_size = Vector2(0, 24)
 	player_bar.show_percentage = false
 	vbox.add_child(player_bar)
 
 	player_stats_label = Label.new()
 	player_stats_label.name = "Stats"
-	player_stats_label.add_theme_font_size_override("font_size", 16)
+	player_stats_label.add_theme_font_size_override("font_size", 18)
 	vbox.add_child(player_stats_label)
 
 func start_battle() -> void:
